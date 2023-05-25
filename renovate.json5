@@ -100,6 +100,12 @@
       "matchUpdateTypes": ["minor", "patch"],
     },
     {
+      "groupName": "javascript-dev",
+      "matchLanguages": ["javascript"],
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
+    },
+    {
       "groupName": "Terraform",
       "matchManagers": ["terraform"],
     },
