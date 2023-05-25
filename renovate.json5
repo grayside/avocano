@@ -82,22 +82,27 @@
     {
       "groupName": "go-nonmajor",
       "matchLanguages": ["go"],
+      "matchUpdateTypes": ["minor", "patch"],
     },
     {
       "groupName": "python-nonmajor",
       "matchLanguages": ["python"],
+      "matchUpdateTypes": ["minor", "patch"],
     },
     {
       "groupName": "java-nonmajor",
       "matchLanguages": ["java"],
+      "matchUpdateTypes": ["minor", "patch"],
     },
     {
       "groupName": "js-nonmajor",
       "matchLanguages": ["js"],
+      "matchUpdateTypes": ["minor", "patch"],
     },
     {
       "groupName": "nodejs-nonmajor",
       "matchLanguages": ["node"],
+      "matchUpdateTypes": ["minor", "patch"],
     },
     {
       "groupName": "npm-dev",
@@ -108,6 +113,7 @@
     {
       "groupName": "Terraform",
       "matchManagers": ["terraform"],
+      "separateMajorMinor": false,
     },
 
     // Updating coupled ecosystems.
