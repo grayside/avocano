@@ -82,28 +82,27 @@
     {
       "groupName": "go-minorpatch",
       "matchLanguages": ["go"],
-      "matchUpdateTypes": ["minor", "patch", "pin"],
+//      "matchUpdateTypes": ["minor", "patch", "pin"],
     },
     {
       "groupName": "python-minorpatch",
       "matchLanguages": ["python"],
-      "matchUpdateTypes": ["minor", "patch"],
+//      "matchUpdateTypes": ["minor", "patch"],
     },
     {
       "groupName": "java-minorpatch",
       "matchLanguages": ["java"],
-      "matchUpdateTypes": ["minor", "patch"],
+//      "matchUpdateTypes": ["minor", "patch"],
     },
     {
       "groupName": "javascript-minorpatch",
       "matchLanguages": ["javascript"],
-      "matchUpdateTypes": ["minor", "patch"],
+//      "matchUpdateTypes": ["minor", "patch"],
     },
     {
       "groupName": "javascript-dev",
       "matchLanguages": ["javascript"],
       "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["major", "minor", "patch"],
       "separateMajorMinor": false,
     },
     {
