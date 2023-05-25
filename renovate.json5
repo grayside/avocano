@@ -104,6 +104,7 @@
       "matchLanguages": ["javascript"],
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["major", "minor", "patch"],
+      "separateMajorMinor": false,
     },
     {
       "groupName": "Terraform",
