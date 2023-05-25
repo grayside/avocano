@@ -1,18 +1,50 @@
+// Dependency Update Configuration
+//
+// See https://docs.renovatebot.com/configuration-options/
+// See https://json5.org/ for JSON5 syntax
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
-    ":prConcurrentLimitNone",
+    "config:base", // https://docs.renovatebot.com/presets-config/#configbase
+    ":semanticCommits", // https://docs.renovatebot.com/presets-default/#semanticcommits
+    ":ignoreUnstable", // https://docs.renovatebot.com/presets-default/#ignoreunstable
+    ":separateMajorReleases", // https://docs.renovatebot.com/presets-default/#separatemajorreleases
+    ":prConcurrentLimitNone", // View complete backlog as PRs. https://docs.renovatebot.com/presets-default/#prconcurrentlimitnone
+    ":prNotPending", // https://docs.renovatebot.com/presets-default/#prnotpending
+    ":prHourlyLimitNone", // https://docs.renovatebot.com/presets-default/#prhourlylimitnone
+    "docker:enableMajor", // https://docs.renovatebot.com/presets-docker/#dockerenablemajor
   ],
-  "rangeStrategy": "auto",
-  "stabilityDays": 3,
-  "schedule": "every weekend",
-  "timezone": "America/Los_Angeles",
+
+  // Synchronized with a 2 week sprint cycle and outside business hours.
+  // https://docs.renovatebot.com/configuration-options/#schedule
+  "schedule": ["every 2 weeks on Saturday"],
+
+  // Give ecosystem time to catch up.
+  // npm allows maintainers to unpublish a release up to 3 days later.
+  // https://docs.renovatebot.com/configuration-options/#minimumreleaseage
+  "minimumReleaseAge": "3", 
+
+  // Create PRs, but do not update them without manual action.
+  // Reduces spurious retesting in repositories that have many PRs at a time.
+  // https://docs.renovatebot.com/configuration-options/#rebasewhen
+  "rebaseWhen": "never",
+
+  // Organizational processes.
+  // https://docs.renovatebot.com/configuration-options/#dependencydashboardlabels
+  "dependencyDashboardLabels": [
+    "type: process",
+  ],
+  // https://docs.renovatebot.com/configuration-options/#prbodynotes
+  "prBodyNotes": [
+    "Reviewer is responsible for dependency update. Ensure adequate automated",
+    "or manual testing is performed before merge.",
+  ],
+
   "packageRules": [
-    // Report impact of a dependency update via PR label to assist reviewers.
+    // Report impact of a dependency update via PR label.
     {
       "matchUpdateTypes": ["patch"],
-      "labels": ["semver: patch"],
+       "labels": ["semver: patch"],
     },
     {
       "matchUpdateTypes": ["minor"],
@@ -22,79 +54,73 @@
       "matchUpdateTypes": ["major"],
        "labels": ["semver: major"],
     },
+
+    // Language-specific behaviors.
     {
-      "matchPaths": [
-        "client/**",
-      ],
-      "lockFileMaintenance": {
-        "enabled": true,
-        "recreateClosed": true,
-      },
-      "pinVersions": false,
-      "rebaseWhen": "behind-base-branch",
+      "matchLanguages": ["go"],
+      "postUpdateOptions": ["gomodTidy"],
     },
+
+    // Tooling & Runtime behaviors.
     {
-      // Group runtime updates.
-      // Applies to Dockerfile, cloudbuild.yaml, and others.
-      "groupName": "Language & Runtimes",
+      // Covers Dockerfiles, cloudbuild.yaml, and other docker-based tools.
+      "groupName": "Docker Runtimes",
       "matchDatasources": ["docker"],
+      // TODO: Uncomment if your Dockerfiles are not included in samples.
+      // Increases build repeatability, image cache use, and supply chain security.
+      // "pinDigests": true,
     },
     {
-      // Group terraform updates together.
+       "groupName": "GitHub Actions",
+       "matchManagers": ["github-actions"],
+       "pinDigests": true,
+    },
+
+    // Language groupings.
+    // These are separated to facilitate PR review by single-language experts.
+    {
+      "groupName": "minorpatch", 
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "groupName": "go-minorpatch",
+      "matchLanguages": ["go"],
+      "matchUpdateTypes": ["minor", "patch", "pin"],
+    },
+    {
+      "groupName": "python-minorpatch",
+      "matchLanguages": ["python"],
+      "matchUpdateTypes": ["minor", "patch"],
+    },
+    {
+      "groupName": "java-minorpatch",
+      "matchLanguages": ["java"],
+      "matchUpdateTypes": ["minor", "patch"],
+    },
+    {
+      "groupName": "javascript-minorpatch",
+      "matchLanguages": ["javascript"],
+      "matchUpdateTypes": ["minor", "patch"],
+    },
+    {
       "groupName": "Terraform",
       "matchManagers": ["terraform"],
     },
+
+    // Updating coupled ecosystems.
     {
-      // Group GitHub Actions and pin digests for immutable use.
-      "groupName": "GitHub Actions",
-      "matchManagers": ["github-actions"],
-      "pinDigests": true,
-    },
-    {
-      // Group non-major Python updates.
-      "groupName": "Python",
-      "matchLanguages": ["python"],
-      "matchUpdateTypes": ["minor", "patch"],
-    },
-    {
-      // Group non-major runtime dependencies for Node.js.
-      "groupName": "JS Runtime",
-      "matchLanguages": ["js", "node"],
-      "matchUpdateTypes": ["minor", "patch"],
-      // Scope the code to what we use in production operation.
-      "matchDepTypes": ["dependencies"],
-    },
-    {
-      // Group non-major build dependencies for Node.js.
-      "groupName": "JS Build",
-      "matchLanguages": ["js", "node"],
-      "matchDepTypes": ["devDependencies"],
-    },
-    {
-      // Playwright dependencies require tight alignment.
       "groupName": "Playwright",
-      "matchPackageNames": ["playwright", "@playwright/test", "mcr.microsoft.com/playwright"],
-      // Run daily to add delayed but related updates to the group PR.
-      "schedule": "before 9am",
-      "prBodyNotes": [
-        ":warning: Playwright dependencies may roll out on a staggered schedule.",
-        "If tests are not passing due to version conflict, wait for other packages",
-        "and re-run renovate on this PR to retry the update.",
+      "matchPackageNames": [
+        "playwright",
+        "@playwright/test",
+        "mcr.microsoft.com/playwright",
       ],
     },
     {
-      // OpenTelemetry dependencies require tight alignment.
       "groupName": "OpenTelemetry",
       "matchLanguages": ["python"],
       "matchPackagePrefixes": ["opentelemetry-"],
-      // Run daily to add delayed but related updates to the group PR.
-      "schedule": "before 9am",
-      "prBodyNotes": [
-        ":warning: OpenTelemetry dependencies may roll out on a staggered schedule.",
-        "If tests are not passing due to version conflict, wait for other packages",
-        "and re-run renovate on this PR to retry the update.",
-      ],
     },
   ],
 }
-
