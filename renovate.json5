@@ -8,6 +8,7 @@
     "config:base", // https://docs.renovatebot.com/presets-config/#configbase
     ":semanticCommits", // https://docs.renovatebot.com/presets-default/#semanticcommits
     ":ignoreUnstable", // https://docs.renovatebot.com/presets-default/#ignoreunstable
+    "group:allNonMajor", // https://docs.renovatebot.com/presets-group/#groupallnonmajor
     ":separateMajorReleases", // https://docs.renovatebot.com/presets-default/#separatemajorreleases
     ":prConcurrentLimitNone", // View complete backlog as PRs. https://docs.renovatebot.com/presets-default/#prconcurrentlimitnone
     ":prNotPending", // https://docs.renovatebot.com/presets-default/#prnotpending
@@ -78,11 +79,6 @@
 
     // Language groupings.
     // These are separated to facilitate PR review by single-language experts.
-    {
-      "groupName": "minorpatch", 
-      "matchPackagePatterns": ["*"],
-      "matchUpdateTypes": ["minor", "patch"]
-    },
     {
       "groupName": "go-minorpatch",
       "matchLanguages": ["go"],
