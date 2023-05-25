@@ -80,28 +80,28 @@
     // Language groupings.
     // These are separated to facilitate PR review by single-language experts.
     {
-      "groupName": "go-minorpatch",
+      "groupName": "go-nonmajor",
       "matchLanguages": ["go"],
-//      "matchUpdateTypes": ["minor", "patch", "pin"],
     },
     {
-      "groupName": "python-minorpatch",
+      "groupName": "python-nonmajor",
       "matchLanguages": ["python"],
-//      "matchUpdateTypes": ["minor", "patch"],
     },
     {
-      "groupName": "java-minorpatch",
+      "groupName": "java-nonmajor",
       "matchLanguages": ["java"],
-//      "matchUpdateTypes": ["minor", "patch"],
     },
     {
-      "groupName": "javascript-minorpatch",
-      "matchLanguages": ["javascript"],
-//      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "js-nonmajor",
+      "matchLanguages": ["js"],
     },
     {
-      "groupName": "javascript-dev",
-      "matchLanguages": ["javascript"],
+      "groupName": "nodejs-nonmajor",
+      "matchLanguages": ["node"],
+    },
+    {
+      "groupName": "npm-dev",
+      "matchManagers": ["npm"],
       "matchDepTypes": ["devDependencies"],
       "separateMajorMinor": false,
     },
